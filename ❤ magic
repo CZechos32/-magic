@@ -1,0 +1,42 @@
+client.edit_message(msg,'\n'.join(['\t'.join([str(cell) for cell in row]) for row in A]))
+
+
+with TelegramClient('CLIENT_ID', api_id, api_hash) as client:
+
+   @client.on(events.NewMessage())
+   async def handler(event):
+      sender = await event.get_sender()
+#Если это вы пишете сообщение
+      if(sender.id==chat_id):
+#И сообщение содержит 
+
+        if("❤️ magic" in event.message.message):
+            msg=event.message
+            await clear()
+            # гирлянда
+            for color in colors:
+                await client.edit_message(msg,mix_color(color))
+                time.sleep(0.3)
+            #Рандомный цвет
+            i=0
+            while i<7:
+                await client.edit_message(msg,random_color())
+                i=i+1
+                time.sleep(0.3)
+            #закрашиваем матрицу
+            await fill_color(msg);
+           # Удаляем столбцы и строки
+            A=matrix
+            i=0
+            while i<8:               
+                
+                A=np.delete(A, 1, 1)  
+                A = np.delete(A, 1, 0)  
+                await client.edit_message(msg,'\n'.join(['\t'.join([str(cell) for cell in row]) for row in A]))
+                time.sleep(0.3)
+                i=i+1
+            time.sleep(0.5)
+            #выводим надпись
+            await client.edit_message(msg,"❤ Люблю тебя! ❤")
+          
+   client.run_until_disconnected()
